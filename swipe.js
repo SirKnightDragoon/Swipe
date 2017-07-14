@@ -257,7 +257,11 @@ function Swipe(container, options) {
     },
     start: function(event) {
 
-      var touches = event.touches[0];
+      var evtouches;
+      if (event.touches === null || event.touches.length === 0) evtouches = event.workAroundTouches;
+      else evtouches = event.touches;
+      // give to swipe.js touches variable the "good" touches
+      var touches = evtouches[0];
 
       // measure start values
       start = {
@@ -284,12 +288,17 @@ function Swipe(container, options) {
     },
     move: function(event) {
 
+      var evtouches;
+      if (event.touches === null || event.touches.length === 0) evtouches = event.workAroundTouches;
+      else evtouches = event.touches;
+
       // ensure swiping with one touch and not pinching
-      if ( event.touches.length > 1 || event.scale && event.scale !== 1) return
+      if ( evtouches.length > 1 || event.scale && event.scale !== 1) return
+
+      // give to swipe.js touches variable the "good" touches
+      var touches = evtouches[0];
 
       if (options.disableScroll) event.preventDefault();
-
-      var touches = event.touches[0];
 
       // measure change in x and y
       delta = {
